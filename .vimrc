@@ -1,6 +1,10 @@
+
 " ESCキーのバインド プランクキーボードにしたことにより不要
 "noremap <C-j> <esc>
 "noremap! <C-j> <esc>
+
+" <leader> setting
+let mapleader = ","
 
 " NERDTreeへのショートカット
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
@@ -137,6 +141,8 @@ NeoBundleLazy 'ervandew/eclim', {'build': {'mac': 'ant -Declipse.home=/opt/homeb
 
 " NERDTreeを設定
 NeoBundle 'scrooloose/nerdtree'
+" dbext
+NeoBundle 'vim-scripts/dbext.vim', '18.0'
 
 call neobundle#end()
 
@@ -181,6 +187,20 @@ let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
+
+
+" ===================================
+" DBへの接続情報
+" ===================================
+let dbext_default_profile=""
+let dbext_default_type="PGSQL"
+let dbext_default_user="postgres"
+let dbext_default_passwd="postgres"
+let dbext_default_dbname="sma"
+let dbext_default_host="192.168.33.11"
+let dbext_default_port="5432"
+"vimに表示する行数設定
+let dbext_default_buffer_lines=30
 
 
 " ===================================
