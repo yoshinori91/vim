@@ -13,10 +13,10 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [QWERTY_LAYER] = { /* Qwerty */
-  {KC_TRNS, KC_TRNS, KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_TRNS, KC_BSPC},
-  {KC_N,    FUNC(5), KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    FUNC(8), FUNC(7)},
-  {KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_GRV,    KC_SLSH, KC_M,    KC_P,    KC_B,    KC_Q,    FUNC(4)},
-  {KC_LCTL, KC_ESC,  KC_LGUI, KC_LALT, FUNC(1), FUNC(6), FUNC(6), FUNC(2), KC_LEFT, KC_DOWN, KC_UP,   RESET}
+  {KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
+  {KC_N,    FUNC(5), KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_T(KC_SCLN), FUNC(7)},
+  {KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH, FUNC(4)},
+  {KC_LCTL, KC_ESC,  KC_LGUI, KC_LALT, FUNC(1), SFT_T(KC_SPC), SFT_T(KC_SPC), FUNC(2), KC_LEFT, KC_DOWN, KC_UP,   RESET}
 },
 [LOWER_LAYER] = { /* LOWER */
   {RESET,    KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_7,  KC_8,     KC_9,     KC_TRNS,    KC_TRNS},
@@ -93,3 +93,4 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
       } 
     return MACRO_NONE;
 };
+
