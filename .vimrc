@@ -24,18 +24,14 @@ set clipboard=unnamed,autoselect                                    " yankした
 set incsearch                                                       " インクリメンタルサーチを有効にする
 set ignorecase                                                      " 大文字小文字を区別しない
 set smartcase                                                       " 大文字で検索対象を大文字限定にする
-set hlsearch                                                        " 検索結果をハイライトする
+"set hlsearch                                                        " 検索結果をハイライトする
 set laststatus=2                                                    " ステータスラインを常に表示
 set noswapfile                                                      " スワップファイルは作成しない
 
 nnoremap ,w :w<CR>
 nnoremap ,q :q<CR>
+" ========== 修行中のためhjklを封印 =============
 
-" ========== 全て表示行で移動するため、論理行の移動を削除する
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
 " ========== 画面分割 キー設定 ==========
 nnoremap si <C-w>_<CR>                                              " 画面を最大化
 nnoremap so <C-w>=<CR>                                              " 画面を最小化
@@ -48,6 +44,31 @@ nnoremap sl <C-w>l<CR>                                              " 右に画�
 nnoremap su <C-w>K<CR>                                              " 現在の画面を一番上に移動
 nnoremap sd <C-w>J<CR>                                              " 現在の画面を一番下に移動
 nnoremap sr <C-w>r<CR>                                              " 現在の画面を移動
+
+" ==============================================
+" ========== easy motion 移動キー設定 ==========
+" ==============================================
+" Disable default mappings
+let g:EasyMotion_do_mapping = 0
+
+" Jump to anywhere you want by just `4` or `3` key strokes without thinking!
+" `s{char}{char}{target}`
+nmap <Space> <Plug>(easymotion-s2)
+xmap <SPace> <Plug>(easymotion-s2)
+
+" Jump to first match with enter & space
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
+
+" `JK` Motions: Extend line motions
+map J <Plug>(easymotion-j)
+map K <Plug>(easymotion-k)
+
+" Extend search motions with vital-over command line interface
+" Incremental highlight of all the matches
+" Now, you don't need to repetitively press `n` or `N` with EasyMotion feature
+" `<Tab>` & `<S-Tab>` to scroll up/down a page of next match
+" :h easymotion-command-line
 
 " 全角スペースをハイライト表示
 augroup highlightIdegraphicSpace
@@ -76,8 +97,10 @@ NeoBundle 'tpope/vim-surround'                                      " surround v
 NeoBundle "Shougo/unite.vim"                                        " Unite
 NeoBundle "Shougo/neomru.vim"                                       " Unite open current files
 NeoBundle 'nathanaelkane/vim-indent-guides'                         "インデントガイド
-NeoBundle 'scrooloose/nerdtree'                                     " NERDTreeを設定
 NeoBundle 'vim-scripts/dbext.vim', '18.0'                           " dbext
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'scrooloose/nerdtree'
+
 
 " vimproc
 NeoBundle 'Shougo/vimproc', {
@@ -103,7 +126,7 @@ NeoBundleCheck
 let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup=2
 let g:indent_guides_auto_colors = 0
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=220
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=237
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=240
 
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
@@ -134,6 +157,7 @@ let g:unite_source_grep_max_candidates = 200
 " DBへの接続情報
 " ===================================
 let dbext_default_profile=""
+let g:EasyMotion_leader_key=";"
 let dbext_default_type="PGSQL"
 let dbext_default_user="postgres"
 let dbext_default_passwd="postgres"
@@ -142,11 +166,6 @@ let dbext_default_host="192.168.33.11"
 let dbext_default_port="5432"
 "vimに表示する行数設定
 let dbext_default_buffer_lines=30
-
-" ===================================
-" NERDTreeのショートカット
-" ===================================
-nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
 " ===================================
 " Eclimのショートカット
