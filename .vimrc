@@ -1,4 +1,5 @@
 let mapleader = "\<Space>"                                          " LeaderをSpace
+let $PATH = $PATH . ':' . expand('/home/pc-0535/Development/bin')
 
 norema s <nop>
 noremap ; :
@@ -30,7 +31,6 @@ set noswapfile                                                      " スワッ�
 
 nnoremap ,w :w<CR>
 nnoremap ,q :q<CR>
-" ========== 修行中のためhjklを封印 =============
 
 " ========== 画面分割 キー設定 ==========
 nnoremap si <C-w>_<CR>                                              " 画面を最大化
@@ -53,8 +53,8 @@ let g:EasyMotion_do_mapping = 0
 
 " Jump to anywhere you want by just `4` or `3` key strokes without thinking!
 " `s{char}{char}{target}`
-nmap <Space> <Plug>(easymotion-s2)
-xmap <SPace> <Plug>(easymotion-s2)
+nmap <Space><Space> <Plug>(easymotion-s2)
+xmap <Space><Space> <Plug>(easymotion-s2)
 
 " Jump to first match with enter & space
 let g:EasyMotion_enter_jump_first = 1
@@ -83,6 +83,9 @@ noremap ,a :noh<CR>
 " ========== Neobundle ==========
 " bundleで管理するディレクトリを指定
 " ===============================
+set runtimepath+=~/.vim/vundle.git/
+call vundle#rc()
+
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 " Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
@@ -100,7 +103,22 @@ NeoBundle 'nathanaelkane/vim-indent-guides'                         "インデ�
 NeoBundle 'vim-scripts/dbext.vim', '18.0'                           " dbext
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'jonathanfilip/vim-lucius'
+" ----------- Haskell関連 -----------
+NeoBundle 'kana/vim-filetype-haskell'
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'ujihisa/neco-ghc'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'osyo-manga/vim-watchdogs'
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'ujihisa/ref-hoogle'
+NeoBundle 'ujihisa/unite-haskellimport'
 
+" Disable haskell-vim omnifunc
+let g:haskellmode_completion_ghc = 0
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+let g:ycm_semantic_triggers = {'haskell' : ['.']}
 
 " vimproc
 NeoBundle 'Shougo/vimproc', {
@@ -133,7 +151,8 @@ let g:indent_guides_auto_colors = 0
 " =================================== 
 "  Unit.vimの設定
 " =================================== 
-let g:unite_enable_start_insert=1                                                   " 入力モードで開始する
+" 入力モードで開始する
+let g:unite_enable_start_insert=1
 nnoremap <silent> ,u :Unite file<CR>
 nnoremap <silent> ,f :Unite find<CR>
 nnoremap <silent> ,m :Unite file_mru<CR>
@@ -152,29 +171,23 @@ let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 200
 
-
-" ===================================
-" DBへの接続情報
-" ===================================
-let dbext_default_profile=""
-let g:EasyMotion_leader_key=";"
-let dbext_default_type="PGSQL"
-let dbext_default_user="postgres"
-let dbext_default_passwd="postgres"
-let dbext_default_dbname="sma"
-let dbext_default_host="192.168.33.11"
-let dbext_default_port="5432"
-"vimに表示する行数設定
-let dbext_default_buffer_lines=30
-
 " ===================================
 " Eclimのショートカット
 " ===================================
 " タグジャンプ
-nnoremap <silent> ,jj :<C-u>JavaSearchContext<CR>
-nnoremap <silent> ,ji :<C-u>JavaImport<CR>
-nnoremap <silent> ,jh :<C-u>JavaCallHierarchy<CR>
-nnoremap <silent> ,jb :<C-u>JavaDebugBreakpointToggle<CR>
+nnoremap <silent> )j :<C-u>JavaSearchContext<CR>
+nnoremap <silent> )i :<C-u>JavaImport<CR>
+nnoremap <silent> )c :<C-u>JavaCallHierarchy<CR>
+
+" ===================================
+" Haskell
+" ===================================
+hi ghcmodType ctermbg=green
+nnoremap <Space>gt :<C-u>GhcModType<CR>
+nnoremap <Space>ga :<C-u>GhcModTypeClear<CR>
+nnoremap <Space>gc :<C-u>GhcModCheck<CR>
+nnoremap <Space>gl :<C-u>GhcModLint<CR>
+nnoremap <Space>gs :<C-u>GhcModSigCodegen<CR>
 
 " fugitive git bindings
 nnoremap <silent>,ga :Git add %:p<CR><CR>
@@ -193,9 +206,11 @@ nnoremap <silent>,go :Git checkout<Space>
 nnoremap <silent>,gps :Dispatch! git push<CR>
 nnoremap <silent>,gpl :Dispatch! git pull<CR>
 
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
+
 filetype plugin indent on
 syntax on
-colorscheme wombat
+colorscheme lucius
 set background=dark
 
 " ===================================
