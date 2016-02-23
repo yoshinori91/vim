@@ -99,11 +99,16 @@ NeoBundle 'tomasr/molokai'                                          " カラー�
 NeoBundle 'tpope/vim-surround'                                      " surround vim
 NeoBundle "Shougo/unite.vim"                                        " Unite
 NeoBundle "Shougo/neomru.vim"                                       " Unite open current files
-NeoBundle 'nathanaelkane/vim-indent-guides'                         "インデントガイド
 NeoBundle 'vim-scripts/dbext.vim', '18.0'                           " dbext
 NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'jonathanfilip/vim-lucius'
+NeoBundle 'Yggdroot/indentLine'
+NeoBundle 'itchyny/lightline.vim'
+NeoBundle '29decibel/codeschool-vim-theme'
+NeoBundle 'ujihisa/unite-colorscheme'
+
+let g:indentLine_color_gui = '#D6F7FD'
+
 " ----------- Haskell関連 -----------
 NeoBundle 'kana/vim-filetype-haskell'
 NeoBundle 'eagletmt/ghcmod-vim'
@@ -138,14 +143,6 @@ call neobundle#end()
 " 未インストールのプラグインがある場合、インストールするかどうかを尋ねてくれるようにする設定
 " 毎回聞かれると邪魔な場合もあるので、この設定は任意です。
 NeoBundleCheck
-
-" ========== vim indent guide 設定==========
-"vim-indent-guides
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup=2
-let g:indent_guides_auto_colors = 0
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=237
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=240
 
 " http://blog.remora.cx/2010/12/vim-ref-with-unite.html
 " =================================== 
@@ -212,37 +209,4 @@ filetype plugin indent on
 syntax on
 colorscheme lucius
 set background=dark
-
-" ===================================
-"挿入モード時、ステータスラインの色を変更
-" ===================================
-let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
-
-if has('syntax')
-  augroup InsertHook
-    autocmd!
-    autocmd InsertEnter * call s:StatusLine('Enter')
-    autocmd InsertLeave * call s:StatusLine('Leave')
-  augroup END
-endif
-
-let s:slhlcmd = ''
-function! s:StatusLine(mode)
-  if a:mode == 'Enter'
-    silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
-    silent exec g:hi_insert
-  else
-    highlight clear StatusLine
-    silent exec s:slhlcmd
-  endif
-endfunction
-
-function! s:GetHighlight(hi)
-  redir => hl
-  exec 'highlight '.a:hi
-  redir END
-  let hl = substitute(hl, '[\r\n]', '', 'g')
-  let hl = substitute(hl, 'xxx', '', '')
-  return hl
-endfunction
 
