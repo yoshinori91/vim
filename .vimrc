@@ -1,39 +1,31 @@
-let mapleader = "\<Space>"                                          " LeaderをSpace
-let $PATH = $PATH . ':' . expand('/home/pc-0535/Development/bin')
-
-norema s <nop>
-noremap ; :
-
-set cursorline
 set list
-set ruler
 set number
 set expandtab
 set tabstop=4
 set shiftwidth=4
 set listchars=tab:>-,trail:.,eol:↲,extends:>,precedes:<,nbsp:%
-set notitle
-set shortmess+=I
-set ttyfast
-set t_Co=256
+
 set autoread
 set history=200
 set nobackup
 set guioptions+=a
-set clipboard=unnamed,autoselect
-
-set colorcolumn=80
 
 "  ======== Search ========
 set incsearch
 set ignorecase
 set smartcase
 set hlsearch
-set laststatus=1
+set laststatus=2
 set noswapfile
 
+" ESC2回でハイライトを消す
+nmap <silent> <Esc><Esc> :nohlsearch<CR>
+
 nnoremap ,w :w<CR>
-nnoremap ,p :q<CR>
+nnoremap ,q :q<CR>
+
+tnoremap <silent> <ESC> <C-\><C-n>
+nnoremap <silent> <Space>t :terminal<CR>
 
 " ========== 画面分割 キー設定 ==========
 nnoremap si <C-w>_<CR>
@@ -48,210 +40,29 @@ nnoremap su <C-w>K<CR>
 nnoremap sd <C-w>J<CR>
 nnoremap sr <C-w>r<CR>
 
-" ==============================================
-" ========== easy motion 移動キー設定 ==========
-" ==============================================
-" Disable default mappings
-let g:EasyMotion_do_mapping = 0
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
-" Jump to anywhere you want by just `4` or `3` key strokes without thinking!
-" `s{char}{char}{target}`
-nmap <Space><Space> <Plug>(easymotion-s2)
-xmap <Space><Space> <Plug>(easymotion-s2)
+"unite general settings
+"インサートモードで開始
+let g:unite_enable_start_insert = 1
 
-" Jump to first match with enter & space
-let g:EasyMotion_enter_jump_first = 1
-let g:EasyMotion_space_jump_first = 1
+" 大文字小文字を区別しない
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
 
-" `JK` Motions: Extend line motions
-map J <Plug>(easymotion-j)
-map K <Plug>(easymotion-k)
-
-" Extend search motions with vital-over command line interface
-" Incremental highlight of all the matches
-" Now, you don't need to repetitively press `n` or `N` with EasyMotion feature
-" `<Tab>` & `<S-Tab>` to scroll up/down a page of next match
-" :h easymotion-command-line
-
-" 全角スペースをハイライト表示
-augroup highlightIdegraphicSpace
-    autocmd!
-    autocmd Colorscheme * highlight IdeographicSpace term=underline ctermbg=DarkGreen guibg=DarkGreen
-    autocmd VimEnter,WinEnter * match IdeographicSpace /　/
-augroup END
-
-" <ESC>hでハイライトをOFFにする
-noremap ,a :noh<CR>
-
-" ========== Neobundle ==========
-" bundleで管理するディレクトリを指定
-" ===============================
-set runtimepath+=~/.vim/vundle.git/
-call vundle#rc()
-
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-" Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-NeoBundleFetch 'Shougo/neobundle.vim'                               " neobundle自体をneobundleで管理
-NeoBundle 'tpope/vim-fugitive'                                      " Git
-NeoBundle 'jeffreyiacono/vim-colors-wombat'                         " カラースキーマ wombat
-NeoBundle 'morhetz/gruvbox'                                         " カラースキーマ gruvbox
-NeoBundle 'sickill/vim-monokai'                                     " カラースキーマ monokai
-NeoBundle 'tomasr/molokai'                                          " カラースキーマ molokai
-NeoBundle 'tpope/vim-surround'                                      " surround vim
-NeoBundle "Shougo/unite.vim"                                        " Unite
-NeoBundle "Shougo/neomru.vim"                                       " Unite open current files
-NeoBundle 'vim-scripts/dbext.vim', '18.0'                           " dbext
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'jonathanfilip/vim-lucius'
-NeoBundle 'Yggdroot/indentLine'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle '29decibel/codeschool-vim-theme'
-NeoBundle 'sorah/unite-ghq'
-
-NeoBundle 'nixprime/cpsm'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-
-let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
-" ----------- Haskell関連 -----------
-NeoBundle 'kana/vim-filetype-haskell'
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'ujihisa/neco-ghc'
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'osyo-manga/vim-watchdogs'
-NeoBundle 'thinca/vim-ref'
-NeoBundle 'ujihisa/ref-hoogle'
-NeoBundle 'ujihisa/unite-haskellimport'
-
-" Disable haskell-vim omnifunc
-let g:haskellmode_completion_ghc = 0
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-let g:ycm_semantic_triggers = {'haskell' : ['.']}
-
-" vimproc
-NeoBundle 'Shougo/vimproc', {
-  \ 'build' : {
-    \ 'windows' : 'make -f make_mingw32.mak',
-    \ 'cygwin' : 'make -f make_cygwin.mak',
-    \ 'mac' : 'make -f make_mac.mak',
-    \ 'unix' : 'make -f make_unix.mak',
-  \ },
-  \ }
-
-NeoBundleLazy 'ervandew/eclim', {'build': {'mac': 'ant -Declipse.home=/opt/homebrew-cask/Caskroom/eclipse-java/4.4.0/eclipse -Dvim.files='.escape(expand('~/.bundle/eclim'), '')}}
-    autocmd FileType java NeoBundleSource eclim
-
-call neobundle#end()
-
-" 未インストールのプラグインがある場合、インストールするかどうかを尋ねてくれるようにする設定
-" 毎回聞かれると邪魔な場合もあるので、この設定は任意です。
-NeoBundleCheck
-
-" http://blog.remora.cx/2010/12/vim-ref-with-unite.html
-" =================================== 
-"  Unit.vimの設定
-" =================================== 
-" 入力モードで開始する
-let g:unite_enable_start_insert=1
-
-"prefix keyの設定
-nmap <Space> [unite]
-
-"カレントディレクトリを表示
-nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-"最近開いたファイル一覧を表示
-nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
-"最近開いたディレクトリを表示
-nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
-"バッファを表示
-nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
-"レジストリを表示
-nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
-"タブを表示
-nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
-"ヒストリ/ヤンクを表示
-nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
-"outline
-nnoremap <silent> [unite]o :<C-u>Unite<Space>outline<CR>
 " grep検索
-nnoremap <silent> [unite]g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+nnoremap <silent> <Space>g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
-nnoremap <silent> [unite]w :<C-u>Unite ghq<CR>
-
-" ===================================
-" unite-grep のバックエンドをagに切替
-" ===================================
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = '--nocolor --nogroup'
-let g:unite_source_grep_recursive_opt = ''
-let g:unite_source_grep_max_candidates = 200
-
-" =================================== 
-"  indentLine.vimの設定
-" =================================== 
-let g:indentLine_color_gui = '#797c91'
-
-" ===================================
-" Eclimのショートカット
-" ===================================
-" タグジャンプ
-nnoremap <silent> )j :<C-u>JavaSearchContext<CR>
-nnoremap <silent> )i :<C-u>JavaImport<CR>
-nnoremap <silent> )c :<C-u>JavaCallHierarchy<CR>
-
-" ===================================
-" Haskell
-" ===================================
-hi ghcmodType ctermbg = green
-nnoremap <Space>gt :<C-u>GhcModType<CR>
-nnoremap <Space>ga :<C-u>GhcModTypeClear<CR>
-nnoremap <Space>gc :<C-u>GhcModCheck<CR>
-nnoremap <Space>gl :<C-u>GhcModLint<CR>
-nnoremap <Space>gs :<C-u>GhcModSigCodegen<CR>
-
-" fugitive git bindings
-nnoremap <silent>,ga :Git add %:p<CR><CR>
-nnoremap <silent>,gs :Gstatus<CR>
-nnoremap <silent>,gc :Gcommit -v -q<CR>
-nnoremap <silent>,gt :Gcommit -v -q %:p<CR>
-nnoremap <silent>,gd :Gdiff<CR>
-nnoremap <silent>,ge :Gedit<CR>
-nnoremap <silent>,gr :Gread<CR>
-nnoremap <silent>,gw :Gwrite<CR><CR>
-nnoremap <silent>,gl :silent! Glog<CR>:bot copen<CR>
-nnoremap <silent>,gp :Ggrep<Space>
-nnoremap <silent>,gm :Gmove<Space>
-nnoremap <silent>,gb :Git branch<Space>
-nnoremap <silent>,go :Git checkout<Space>
-nnoremap <silent>,gps :Dispatch! git push<CR>
-nnoremap <silent>,gpl :Dispatch! git pull<CR>
-
-nnoremap <silent><C-t> :NERDTreeToggle<CR>
-nnoremap <silent><C-p> :CtrlPMixed<CR>
-
-let g:ctrlp_use_caching = 0
-" 検索ウィンドウの設定
-" :help g:ctrlp_match_window
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:50'
-
+" unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-else
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-  let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
-    \ }
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
 endif
 
-let g:ctrlp_cache_dir = '/home/pc-0535/projects/sma-app'
+syntax enable
+colorscheme rdark
 
-filetype plugin indent on
-syntax on
-colorscheme negibat
-set background=dark
-
+let g:ctrlp_map = '<Nop>'
+nnoremap <silent> <Space><Space> :<C-u>CtrlP<CR>
+nnoremap <silent> <Space>b :<C-u>CtrlPBuffer<CR>
