@@ -5,6 +5,12 @@ set noswapfile                              " スワップファイルは作成�
 set autoread                                " 編集中のファイルが変更されたら自動で読直し
 set hidden                                  " バッファ編集中その他のファイルを開けるように
 set showcmd                                 " 入力中のコマンドをステータスに表示
+" 改行時、上列のコメント文字を引き継がないように設定
+augroup auto_comment_off
+    autocmd!
+    autocmd BufEnter * setlocal formatoptions-=r
+    autocmd BufEnter * setlocal formatoptions-=o
+augroup END
 " ====================== basic display setting ==========================================
 set number                                  " 行番号を表示
 set virtualedit=onemore                     " 行末の一文字先まで表示
@@ -26,52 +32,33 @@ nnoremap <Esc><Esc> :nohlsearch<CR><Esc>    " 検索強調表示を解除
 " ====================== save and quit ==================================================
 nnoremap ,s :w<CR><ESC>                     " ファイル保存 (Ctrl-S)
 nnoremap ,w :q!<CR><ESC>                    " ファイル閉じる (Ctrl-W)
-" ====================== color ==========================================================
+" ====================== [color] ========================================================
 colorscheme wombat                          " カラースキーマ
 syntax on                                   " シンタックス
-" ====================== filetype settings ==============================================
+" ====================== <file type> ====================================================
 filetype on                                             " ファイル別設定をON
 filetype indent plugin on                               " ファイル別indent,pluginをON
 autocmd BufRead,BufNewFile *.py setfiletype python      " PYTHON
 autocmd BufRead,BufNewFile *.rb setfiletype ruby        " RUBY
 autocmd BufRead,BufNewFile *.js setfiletype javascript  " JAVASCRIPT
-
-
-" ========== 画面分割 キー設定 ==========
-nnoremap si <C-w>_<CR>
-nnoremap so <C-w>=<CR>
-nnoremap ss :split<CR>
-nnoremap sv :vsplit<CR>
-nnoremap sh <C-w>h<CR>
-nnoremap sj <C-w>j<CR>
-nnoremap sk <C-w>k<CR>
-nnoremap sl <C-w>l<CR>
-nnoremap su <C-w>K<CR>
-nnoremap sd <C-w>J<CR>
-nnoremap sr <C-w>r<CR>
-
-nnoremap <silent><C-e> :NERDTreeToggle<CR>
-
-"unite general settings
-"インサートモードで開始
-let g:unite_enable_start_insert = 1
-
-" 大文字小文字を区別しない
-let g:unite_enable_ignore_case = 1
-let g:unite_enable_smart_case = 1
-
-" grep検索
-nnoremap <silent> <Space>g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-
-" unite grep に ag(The Silver Searcher) を使う
+" ====================== split window ===================================================
+nnoremap ss :split<CR>                      " 画面を水平に分割
+nnoremap sv :vsplit<CR>                     " 画面を垂直に分割
+nnoremap si <C-w>_<CR>                      " 分割画面を最大表示
+nnoremap so <C-w>=<CR>                      " 最大表示した画面を戻す
+nnoremap sh <C-w>h<CR>                      " 左の分割画面に移動
+nnoremap sj <C-w>j<CR>                      " 下の分割画面に移動
+nnoremap sk <C-w>k<CR>                      " 上の分割画面に移動
+nnoremap sl <C-w>l<CR>                      " 右の分割画面に移動
+" ====================== [<ctrlp>] ======================================================
+" 検索をAGに変更する
 if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
+  let g:ctrlp_use_caching=0
+    let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
 endif
+nnoremap <Space><Space> :<C-u>CtrlPMixed<CR>          "<Space>*2 で起動
+" 検索対象外をファイルを設定するには、~/.agignore に設定
 
-syntax enable
-colorscheme rdark
 
 let g:ctrlp_map = '<Nop>'
 nnoremap <silent> <Space><Space> :<C-u>CtrlP<CR>
