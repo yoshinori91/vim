@@ -1,96 +1,70 @@
-#include "keymap_common.h"
-#include "backlight.h"
-#include "debug.h"
+#include "planck.h"
 
-#define QWERTY_LAYER 0
-#define LOWER_LAYER 1
-#define UPPER_LAYER 2
-#define SPACEFN_LAYER 3
-#define F_LAYER 4
-#define FN1_LAYER 5
-#define CTL_LAYER 6
-#define FN2_LAYER 7
+// Each layer gets a name for readability, which is then used in the keymap matrix below.
+// The underscores don't mean anything - you can have a layer called STUFF or any other name.
+// Layer names don't all need to be of the same length, obviously, and you can also skip them
+// entirely and just use numbers.
+
+// Fillers to make layering more clear
+#define _______ KC_TRNS
+#define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[QWERTY_LAYER] = { /* Qwerty */
-  {KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC},
-  {KC_N,    FUNC(5), KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_T(KC_SCLN), FUNC(7)},
-  {KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH, FUNC(4)},
-  {KC_LCTL, KC_ESC,  KC_LGUI, KC_LALT, FUNC(1), SFT_T(KC_SPC), SFT_T(KC_SPC), FUNC(2), KC_LEFT, KC_DOWN, KC_UP,   RESET}
+
+[0] = {
+  {KC_EQL,  KC_Q,    KC_W,    KC_E,          KC_R,          KC_T,          KC_Y,    KC_U,          KC_I,          KC_O,    KC_P,          KC_MINS},
+  {OSL(3),  KC_A,    KC_S,    KC_D,          KC_F,          KC_G,          KC_H,    KC_J,          KC_K,          KC_L,    OSM(MOD_LCTL), KC_ENT},
+  {KC_LSFT, KC_Z,    KC_X,    KC_C,          KC_V,          KC_B,          KC_N,    KC_M,          KC_COMM,       KC_DOT,  KC_SLSH,       KC_TILD},
+  {KC_DEL,  KC_LCTL, KC_LALT, OSM(MOD_LALT), LT(1, KC_ESC), SFT_T(KC_SPC), _______, LT(2, KC_TAB), OSM(MOD_LGUI), KC_DOWN, KC_UP,         KC_RGHT}
 },
-[LOWER_LAYER] = { /* LOWER */
-  {RESET,    KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_7,  KC_8,     KC_9,     KC_TRNS,    KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_BSPC,  KC_4,  KC_5,     KC_6,     S(KC_SCLN), LCTL(KC_L)},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_1,  KC_2,     KC_3,     KC_TRNS,    KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_0,  KC_TRNS,  KC_TRNS,  KC_TRNS,    KC_TRNS}
+[1] = {
+  {_______,_______,KC_AMPR, KC_ASTR, KC_PIPE, _______, _______, KC_7, KC_8,    KC_9,    _______, _______},
+  {_______,_______,KC_DLR,  KC_PERC, KC_CIRC, KC_COLN, KC_QUOT, KC_4, KC_5,    KC_6,    _______, _______},
+  {_______,_______,KC_EXLM, KC_AT,   KC_HASH, KC_SCLN, KC_DQUO, KC_1, KC_2,    KC_3,    _______, _______},
+  {_______,_______,_______, _______, _______, KC_BSPC, _______, KC_0, _______, _______, _______, _______}
+
+//  {RESET,   _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY}
+//  {KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC},
+//  {KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE},
+//  {_______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,S(KC_NUHS),S(KC_NUBS),_______, _______, _______},
+//  {RESET,   _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY}
 },
-[UPPER_LAYER] = { /* RAISE */
-  {KC_TRNS,   KC_TRNS, KC_UNDS, KC_PLUS,  KC_SCLN,  KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS,   KC_TRNS,  KC_TRNS, KC_TRNS},
-  {KC_TRNS,   KC_MINS, KC_EQL,  KC_LPRN,  KC_RPRN,  KC_TRNS, KC_LEFT, KC_DOWN,   KC_UP,     KC_RIGHT, KC_HOME, KC_END},
-  {KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS,   KC_TRNS,  KC_TRNS, KC_TRNS},
-  {KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS,   KC_TRNS,  KC_TRNS, KC_TRNS}
+[2] = {
+  {KC_TILD,  KC_F2,KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F12,  KC_F12},
+  {_______,_______,KC_LBRC, KC_LCBR, KC_LPRN, KC_EQL,  KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_HOME, KC_END},
+  {_______,_______,KC_RBRC, KC_RCBR, KC_RPRN, KC_PLUS, _______, _______, _______, _______,  _______, _______},
+  {RESET,  _______,_______, _______, _______, _______, _______, _______, _______, _______,  _______, _______}
 },
-[SPACEFN_LAYER] = { /* SpaceFN */
-  {KC_TRNS,  KC_TRNS,  S(KC_W),  S(KC_E),  S(KC_R),  S(KC_T),  S(KC_Y),     S(KC_U),  S(KC_I),  S(KC_O),  KC_TRNS,    KC_DELETE},
-  {S(KC_N),  S(KC_A),  S(KC_S),  S(KC_D),  S(KC_F),  S(KC_G),  S(KC_H),     S(KC_J),  S(KC_K),  S(KC_L),  S(KC_QUOT), KC_TRNS},
-  {KC_TRNS,  S(KC_Z),  S(KC_X),  S(KC_C),  S(KC_V),  S(KC_GRV),S(KC_SLSH),  S(KC_M),  S(KC_P),  S(KC_B),  S(KC_Q),    KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,     KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,    KC_TRNS}
-},
-[F_LAYER] = { 
-  {KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,   KC_F6,    KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS},
-  {KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,  KC_F12,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS},
-  {KC_CALC,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS, KC_TRNS}
-},
-[FN1_LAYER] = { 
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  S(KC_7),  S(KC_8),  KC_TRNS,  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_SCLN,  S(KC_4),  S(KC_5),  S(KC_6),  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  S(KC_1),  S(KC_2),  S(KC_3),  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS}
-},
-[CTL_LAYER] = { 
-  {KC_TRNS,     KC_TRNS,     LCTL(KC_W),  LCTL(KC_E),  LCTL(KC_R),  LCTL(KC_T),  LCTL(KC_Y),  LCTL(KC_U),  LCTL(KC_I),  LCTL(KC_O),  KC_TRNS,    KC_TRNS},
-  {LCTL(KC_N),  LCTL(KC_A),  LCTL(KC_S),  LCTL(KC_D),  LCTL(KC_F),  LCTL(KC_G),  LCTL(KC_H),  LCTL(KC_J),  LCTL(KC_K),  LCTL(KC_L),  KC_TRNS,    KC_TRNS},
-  {KC_TRNS,     LCTL(KC_Z),  LCTL(KC_X),  LCTL(KC_C),  LCTL(KC_V),  LCTL(KC_B),  LCTL(KC_N),  LCTL(KC_M),  LCTL(KC_P),  LCTL(KC_B),  LCTL(KC_Q), KC_TRNS},
-  {KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,    KC_TRNS}
-},
-[FN2_LAYER] = { 
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  S(KC_LBRC), S(KC_RBRC), S(KC_COMM),  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_COMM,  KC_DOT,   KC_LBRC,    KC_RBRC,    S(KC_DOT),   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,    KC_TRNS,    KC_TRNS,     KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS},
-  {KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,    KC_TRNS,    KC_TRNS,     KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS}
+[3] = {
+  {_______, LCAG(KC_Q),    LCAG(KC_W),    LCAG(KC_E),   LCAG(KC_R),    LCAG(KC_T),    LCAG(KC_Y),    LCAG(KC_U),    LCAG(KC_I),    LCAG(KC_O),    LCAG(KC_P),     LCAG(KC_MINS)},
+  {_______, LCAG(KC_A),    LCAG(KC_S),    LCAG(KC_D),   LCAG(KC_F),    LCAG(KC_G),    LCAG(KC_H),    LCAG(KC_J),    LCAG(KC_K),    LCAG(KC_L),    LCAG(KC_SCLN),  LCAG(KC_ENT)},
+  {_______, LCAG(KC_Z),    LCAG(KC_X),    LCAG(KC_C),   LCAG(KC_V),    LCAG(KC_B),    LCAG(KC_N),    LCAG(KC_M),    LCAG(KC_COMM), LCAG(KC_DOT),  LCAG(KC_SLSH),  LCAG(KC_TILD)},
+  {_______, _______,_______, _______, _______, _______, _______, _______, _______, _______,  _______, _______}
 }
+
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_KEY(LOWER_LAYER, KC_ESC),  
 
-    [2] = ACTION_LAYER_TAP_KEY(UPPER_LAYER, KC_TAB), 
-
-    [4] = ACTION_LAYER_MOMENTARY(F_LAYER),
- 
-    [5] = ACTION_LAYER_TAP_KEY(FN1_LAYER, KC_A),  
-
-    [6] = ACTION_LAYER_TAP_KEY(SPACEFN_LAYER, KC_SPC), 
-
-    [7] = ACTION_LAYER_TAP_KEY(CTL_LAYER, KC_ENT),
-
-    [8] = ACTION_LAYER_TAP_KEY(FN2_LAYER, KC_QUOT),
 };
 
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) 
+const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:   
-        if (record->event.pressed) {
-          register_code(KC_RSFT);
-          backlight_step();
-        } else {
-          unregister_code(KC_RSFT);
-        }
-        break;
-      } 
-    return MACRO_NONE;
+  switch(id) {
+    case 1:
+      if (record->event.pressed) {
+        layer_on(1);
+      } else {
+        layer_off(1);
+      }
+      break;
+    case 2:
+      if (record->event.pressed) {
+        layer_on(2);
+      } else {
+        layer_off(2);
+      }
+      break;
+  }
+  return MACRO_NONE;
 };
-
