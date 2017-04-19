@@ -32,6 +32,8 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Yggdroot/indentLine'
 " 末尾の全角半角空白文字を赤くハイライト
 NeoBundle 'bronson/vim-trailing-whitespace'
+" 括弧を自動挿入
+NeoBundle 'cohama/lexima.vim'
 " 構文エラーチェック
 NeoBundle 'scrooloose/syntastic'
 " 多機能セレクタ
@@ -45,10 +47,15 @@ NeoBundle 'rking/ag.vim'
 " プロジェクトに入ってるESLintを読み込む
 NeoBundle 'pmsorhaindo/syntastic-local-eslint.vim'
 " Javascript Syntax
-NeoBundleLazy 'othree/yajs.vim', {'autoload': {'filetypes': ['javascript']}}
+NeoBundle 'othree/yajs.vim'
 " Jsx Syntax
-NeoBundleLazy 'maxmellon/vim-jsx-pretty'
-au BufRead,BufNewFile *.jsx set filetype=javascript.jsx
+NeoBundle 'maxmellon/vim-jsx-pretty'
+" Javascript 静的解析＆保管強化
+NeoBundle 'marijnh/tern_for_vim', {
+  \ 'build': {
+  \   'others': 'npm install'
+  \}}
+
 " vimのlua機能が使える時だけ以下のVimプラグインをインストールする
 if has('lua')
     " コードの自動補完
@@ -173,6 +180,26 @@ if &term =~ "xterm"
 endif
 
 autocmd FileType * setlocal formatoptions-=ro
+
+"----------------------------------------------------------
+" Syntastic
+"----------------------------------------------------------
+" 構文エラー行に「>>」を表示
+let g:syntastic_enable_signs = 1
+" 他のVimプラグインと競合するのを防ぐ
+let g:syntastic_always_populate_loc_list = 1
+" 構文エラーリストを非表示
+let g:syntastic_auto_loc_list = 0
+" ファイルを開いた時に構文エラーチェックを実行する
+let g:syntastic_check_on_open = 1
+" 「:wq」で終了する時も構文エラーチェックする
+let g:syntastic_check_on_wq = 1
+" Javascript用. 構文エラーチェックにESLintを使用
+let g:syntastic_javascript_checkers=['eslint']
+" Javascript以外は構文エラーチェックをしない
+let g:syntastic_mode_map = { 'mode': 'passive',
+                           \ 'active_filetypes': ['javascript'],
+                           \ 'passive_filetypes': [] }
 "----------------------------------------------------------
 " neocomplete・neosnippetの設定
 "----------------------------------------------------------
@@ -188,32 +215,22 @@ if neobundle#is_installed('neocomplete.vim')
     " 1文字目の入力から補完のポップアップを表示
     let g:neocomplete#auto_completion_start_length = 1
     " バックスペースで補完のポップアップを閉じる
-    inoremap <expr><BS> neocomplete#smart_close_popup()."<C-h>"
-    " エンターキーで補完候補の確定. スニペットの展開もエンターキーで確定
-    imap <expr><CR> neosnippet#expandable() ? "<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "<C-y>" : "<CR>"
-    " タブキーで補完候補の選択. スニペット内のジャンプもタブキーでジャンプ
-    imap <expr><TAB> pumvisible() ? "<C-n>" : neosnippet#jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"
-endif
-"----------------------------------------------------------
-" Syntastic
-"----------------------------------------------------------
-" 構文エラー行に「>>」を表示
-let g:syntastic_enable_signs = 1
-" 他のVimプラグインと競合するのを防ぐ
-let g:syntastic_always_populate_loc_list = 1
-" 構文エラーリストを非表示
-let g:syntastic_auto_loc_list = 0
-" ファイルを開いた時に構文エラーチェックを実行する
-let g:syntastic_check_on_open = 1
-" 「:wq」で終了する時も構文エラーチェックする
-let g:syntastic_check_on_wq = 1
+    inoremap <expr><BS> neocomplete#smart_close_popup()."<ESC>"
+    " <TAB>: completion.
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+    " Plugin key-mappings.
+    imap <C-k> <Plug>(neosnippet_expand_or_jump)
+    smap <C-k> <Plug>(neosnippet_expand_or_jump)
 
-" Javascript用. 構文エラーチェックにESLintを使用
-let g:syntastic_javascript_checkers=['eslint']
-" Javascript以外は構文エラーチェックをしない
-let g:syntastic_mode_map = { 'mode': 'passive',
-                           \ 'active_filetypes': ['javascript'],
-                           \ 'passive_filetypes': [] }
+    " SuperTab like snippets behavior.
+    imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+    smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+    " For snippet_complete marker.
+    if has('conceal')
+        set conceallevel=2 concealcursor=i
+    endif
+endif
 "----------------------------------------------------------
 " CtrlP
 "----------------------------------------------------------
@@ -255,3 +272,4 @@ nnoremap sl <C-w>l<CR>                      " 右の分割画面に移動
 " save and quit
 nnoremap ,s :w<CR><ESC>                     " ファイル保存 (Ctrl-S)
 nnoremap ,w :q!<CR><ESC>                    " ファイル閉じる (Ctrl-W)
+
