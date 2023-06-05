@@ -1,0 +1,110 @@
+set nocompatible
+
+" Set Dein base path (required)
+let s:dein_base = '/Users/kddi/.local/share/dein'
+
+" Set Dein source path (required)
+let s:dein_src = '/Users/kddi/.local/share/dein/repos/github.com/Shougo/dein.vim'
+
+" Set Dein runtime path (required)
+execute 'set runtimepath+=' . s:dein_src
+
+" Call Dein initialization (required)
+call dein#begin(s:dein_base)
+
+call dein#add(s:dein_src)
+  "Your plugins go heGe:
+  "call dein#add('Shougo/neosnippet.vim')
+  "call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('preservim/nerdtree')
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('ryanoasis/vim-devicons')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('morhetz/gruvbox')
+" Finish Dein initialization (required)
+call dein#end()
+
+let g:gruvbox_transparent_bg = '1'
+syntax enable
+colorscheme gruvbox
+set background=dark
+
+let g:airline_theme = 'gruvbox'            " テーマの定
+let g:airline#extensions#tabline#enabled = 1 " タブラインを表示
+let g:airline_powerline_fonts = 1            " Powerline Fontsを利用
+
+"----------------------------------------------------------
+" 文字
+"----------------------------------------------------------
+set fileencoding=utf-8 " 保存時の文字コード
+set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
+set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
+set ambiwidth=double " □や○文字が崩れる問題を解決
+"----------------------------------------------------------
+" スワップ・バックアップファイル
+"----------------------------------------------------------
+set nobackup                                " バックアップファイルは作成しない
+set noswapfile                              " スワップファイルは作成しない
+set autoread                                " 編集中のファイルが変更されたら自動で読直し
+set hidden                                  " バッファ編集中その他のファイルを開けるように
+"----------------------------------------------------------
+" タブ・インデント
+"----------------------------------------------------------
+set list listchars=tab:\▸\- " タブを可視化
+set expandtab " タブ入力を複数の空白入力に置き換える
+set tabstop=2 " 画面上でタブ文字が占める幅
+set softtabstop=2 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
+set autoindent " 改行時に前の行のインデントを継続する
+set smartindent " 改行時に前の行の構文をチェックし次の行のインデントを増減する
+set shiftwidth=2 " smartindentで増減する幅
+"----------------------------------------------------------
+" ステータスライン
+"----------------------------------------------------------
+set laststatus=2 " ステータスラインを常に表示
+set showmode " 現在のモードを表示
+set showcmd " 打ったコマンドをステータスラインの下に表示
+set ruler " ステータスラインの右側にカーソルの位置を表示する
+"----------------------------------------------------------
+" コマンドモード
+"----------------------------------------------------------
+set wildmenu " コマンドモードの補完
+set history=5000 " 保存するコマンド履歴の数
+"----------------------------------------------------------
+" カーソル
+"----------------------------------------------------------
+set whichwrap=b,s,h,l,<,>,[,],~ " カーソルの左右移動で行末から次の行の行頭への移動が可能になる
+set number " 行番号を表示
+" 行が折り返し表示されていた場合、行単位ではなく表示行単位でカーソルを移動する
+nnoremap j gj
+nnoremap k gk
+nnoremap <down> gj
+nnoremap <up> gk
+
+set cursorline " highlight cursor line
+" --------------------------------------------------------
+" キーマップ
+" --------------------------------------------------------
+" 画面分割
+nnoremap ss :split<CR>                      " 画面を水平に分割
+nnoremap sv :vsplit<CR>                     " 画面を垂直に分割
+nnoremap si <C-w>_<CR>                      " 分割画面を最大表示
+nnoremap so <C-w>=<CR>                      " 最大表示した画面を戻す
+nnoremap sh <C-w>h<CR>                      " 左の分割画面に移動
+nnoremap sj <C-w>j<CR>                      " 下の分割画面に移動
+nnoremap sk <C-w>k<CR>                      " 上の分割画面に移動
+nnoremap sl <C-w>l<CR>                      " 右の分割画面に移動
+" save and quit
+nnoremap ,s :w<CR><ESC>                     " ファイル保存 (Ctrl-S)
+nnoremap ,w :q!<CR><ESC>                    " ファイル閉じる (Ctrl-W)
+"----------------------------------------------------------
+" 文字列検索
+"----------------------------------------------------------
+set incsearch " インクリメンタルサーチ. １文字入力毎に検索を行う
+set ignorecase " 検索パターンに大文字小文字を区別しない
+set smartcase " 検索パターンに大文字を含んでいたら大文字小文字を区別する
+set hlsearch " 検索結果をハイライト
+set wrapscan " 最後まで検索したら、最初に戻る
+
+" ESCキー2度押しでハイライトの切り替え
+nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
